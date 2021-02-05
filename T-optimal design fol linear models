@@ -1,0 +1,76 @@
+rm(list=ls())
+library(numDeriv)
+library(quadprog)
+library(Matrix)
+#---------------------------------------------------------------------
+xstart=c(-1,0,1)
+grid=seq(-1,1,length=25)
+n11=length(grid)
+theta1=c(4.5,-1.5,-2)
+theta2.start=c(4.5,3.85,1.85)
+maxiter=1000
+
+xstartnew=xstart
+n=length(xstartnew)
+wstart=c(rep((1/n),n))
+#---------------------------------------------------------------------
+for(k in 1:maxiter){
+plot(k,xlim=c(k-1,k+1))
+text(x=k+1,y=k,k,col="red")
+
+#---------------------------------------------------------------------
+#                               THETA.HAT
+#---------------------------------------------------------------------
+Tp.theta=function(par){
+theta21=par[1]
+theta22=par[2]
+theta23=par[3]
+
+eta1=theta1[1]+(theta1[2]*exp(xstartnew))+(theta1[3]*exp(-xstartnew))
+eta2=theta21+(theta22*xstartnew)+(theta23*(xstartnew^2))
+eta3=wstart*((eta1-eta2)^2)
+sum(eta3)
+}
+theta2.hat=optim(theta2.start,Tp.theta)$par
+  theta21.hat=theta2.hat[1]
+  theta22.hat=theta2.hat[2]
+  theta23.hat=theta2.hat[3]
+
+
+
+theta2.start=theta2.hat
+
+#---------------------------------------------------------------------
+#                                X.HAT
+#---------------------------------------------------------------------
+psi.had=c()
+for(kk1 in 1:n11){
+psi.hess=function(xhes){
+eta11=theta1[1]+(theta1[2]*exp(xhes))+(theta1[3]*exp(-xhes))
+eta22=theta21.hat+(theta22.hat*xhes)+(theta23.hat*(xhes^2))
+eta33=((eta11-eta22)^2)
+}
+psi.had[kk1]=psi.hess(grid[kk1])
+}
+mm=which.max(psi.had)
+x.hat=grid[mm]
+xstartnew=c(xstartnew,x.hat)
+alpha=1/(k+1)
+wstart=c(((1-alpha)*wstart),alpha)
+n=length(xstartnew)
+}
+
+#---------------------------------------------------------------------
+design=cbind(xstartnew,wstart)
+design.sort=sort(unique(design[,1]))
+result=matrix(0,length(design.sort),2)
+for(i in 1: length(design.sort)){
+mm1=which(design[,1]==design.sort[i])
+result[i,1]=design.sort[i]
+result[i,2]=sum(design[mm1,2])
+}
+
+result
+
+
+
