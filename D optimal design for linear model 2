@@ -1,0 +1,56 @@
+library(BB)
+library(numDeriv)
+#-----------------------------------------------
+xstart=c(-1,0,1)
+n=length(xstart)
+wstart=c(rep((1/n),n))
+grid=seq(-1,1,length=25)
+theta.start=c(4.5,-1.5,-2) 
+max.iter=500
+
+iter=0
+while(iter< max.iter){
+iter=iter+1
+
+plot(iter,xlim=c(iter-1,iter+1))
+  text(x=iter+1,y=iter,iter,col="red")
+
+model=function(par,xmat){
+par[1]+(par[2]*xmat)+(par[3]*(xmat^2))
+}   
+#-----------------------------------------------------------------------------------------------------------------------
+#                                                        X.HAT
+#-----------------------------------------------------------------------------------------------------------------------  
+xhat.func=function(model1,thetah,xh,wh){
+F.mat=jacobian(func=model1, x=thetah, method="Richardson",xmat=xh) 
+W=diag(wh)
+M.mat=t(F.mat)%*%W%*%F.mat
+    
+d.funct=function(xx){
+f=jacobian(func=model1, x=thetah, method="Richardson",xmat=xx)
+d=f%*%solve(M.mat)%*%t(f)
+#psi= det(M.mat)*(1+d/length(xh))
+psi=d
+psi
+}
+d.value=mapply(d.funct,grid) 
+xhat=grid[which.max(d.value)]
+xhat
+}
+  
+x.hat=xhat.func(model,theta.start,xstart,wstart)
+xstart=c(xstart,x.hat)
+alpha=1/(iter+1)
+wstart=c(((1-alpha)*wstart),alpha)
+design=cbind(xstart,wstart)
+n=length(xstart) 
+} 
+#--------------------------------------------------------------------
+design.sort=sort(unique(design[,1]))
+result=matrix(0,length(design.sort),2)
+for(i in 1: length(design.sort)){
+mm1=which(design[,1]==design.sort[i])
+result[i,1]=design.sort[i]
+result[i,2]=sum(design[mm1,2])
+}
+result
