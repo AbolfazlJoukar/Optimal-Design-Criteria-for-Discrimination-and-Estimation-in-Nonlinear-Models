@@ -7,11 +7,9 @@ wstart=c(rep((1/n),n))
 grid=seq(-1,1,length=25)
 theta.start=c(4.5,-1.5,-2) 
 max.iter=500
-
 iter=0
 while(iter< max.iter){
 iter=iter+1
-
 plot(iter,xlim=c(iter-1,iter+1))
   text(x=iter+1,y=iter,iter,col="red")
 
