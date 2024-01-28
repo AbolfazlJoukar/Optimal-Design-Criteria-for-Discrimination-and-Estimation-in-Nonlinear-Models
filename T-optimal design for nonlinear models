@@ -6,11 +6,9 @@ library(Matrix)
 xstart=c(0,4)
 grid=seq(0,30,length=200)
 n11=length(grid)
-
 theta1=1
 theta2.start=0.5
 maxiter=2000
-
 xstartnew=xstart
 n=length(xstartnew)
 wstart=c(rep((1/n),n))
@@ -18,12 +16,10 @@ wstart=c(rep((1/n),n))
 for(k in 1:maxiter){
 plot(k,xlim=c(k-1,k+1))
 text(x=k+1,y=k,k,col="red")
-
 #---------------------------------------------------------------------
 #                               THETA.HAT
 #---------------------------------------------------------------------
 Tp.theta=function(par){
-
 eta1=exp(-theta1*xstartnew)
 eta2=1/(1+(par[1]*xstartnew))
 eta3=wstart*((eta1-eta2)^2)
