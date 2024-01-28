@@ -9,7 +9,6 @@ n11=length(grid)
 theta1=c(4.5,-1.5,-2)
 theta2.start=c(4.5,3.85,1.85)
 maxiter=1000
-
 xstartnew=xstart
 n=length(xstartnew)
 wstart=c(rep((1/n),n))
@@ -35,11 +34,7 @@ theta2.hat=optim(theta2.start,Tp.theta)$par
   theta21.hat=theta2.hat[1]
   theta22.hat=theta2.hat[2]
   theta23.hat=theta2.hat[3]
-
-
-
 theta2.start=theta2.hat
-
 #---------------------------------------------------------------------
 #                                X.HAT
 #---------------------------------------------------------------------
