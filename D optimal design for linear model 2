@@ -7,14 +7,11 @@ wstart=c(rep((1/n),n))
 grid=seq(-1,1,length=25)
 theta.start=c(4.5,-1.5,-2) 
 max.iter=500
-
 iter=0
 while(iter< max.iter){
 iter=iter+1
-
 plot(iter,xlim=c(iter-1,iter+1))
   text(x=iter+1,y=iter,iter,col="red")
-
 model=function(par,xmat){
 par[1]+(par[2]*xmat)+(par[3]*(xmat^2))
 }   
@@ -37,7 +34,6 @@ d.value=mapply(d.funct,grid)
 xhat=grid[which.max(d.value)]
 xhat
 }
-  
 x.hat=xhat.func(model,theta.start,xstart,wstart)
 xstart=c(xstart,x.hat)
 alpha=1/(iter+1)
