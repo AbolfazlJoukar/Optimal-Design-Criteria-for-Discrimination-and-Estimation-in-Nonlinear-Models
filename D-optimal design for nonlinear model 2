@@ -5,17 +5,14 @@ xstart=c(0,0.5,1)
 n=length(xstart)
 wstart=c(rep((1/n),n))
 grid=seq(0,30,length=225)
-
 theta.start=2 
 max.iter=500
-
 iter=0
 while(iter< max.iter){
 iter=iter+1
 
 plot(iter,xlim=c(iter-1,iter+1))
   text(x=iter+1,y=iter,iter,col="red")
-
 model=function(par,xmat){
 1/(1+(par*xmat))
 }   
@@ -37,8 +34,7 @@ psi
 d.value=mapply(d.funct,grid) 
 xhat=grid[which.max(d.value)]
 xhat
-}
-  
+} 
 x.hat=xhat.func(model,theta.start,xstart,wstart)
 xstart=c(xstart,x.hat)
 alpha=1/(iter+1)
